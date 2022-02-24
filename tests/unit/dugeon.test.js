@@ -1,4 +1,4 @@
-import { dugeon } from "../../index.js";
+import { dugeon } from "../../dugeon.js";
 
 test("hero passesd Trail 1 & Trail 2", () => {
   expect(

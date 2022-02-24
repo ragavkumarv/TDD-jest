@@ -23,5 +23,5 @@ function Trail2({ iq, result, status }) {
 export function dugeon({ hero, strength, iq }) {
   const { result, status } = Trail1({ hero, strength });
 
-  return Trail2({ hero, iq, result, status }).result;
+  return Trail2({ iq, result, status }).result;
 }
