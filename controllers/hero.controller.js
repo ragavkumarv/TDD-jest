@@ -8,3 +8,6 @@ async function createHero(req, res) {
 export const heroContoller = {
   createHero,
 };
+
+// getHeroes -> unit + integeration
+// HeroModel.find({})
