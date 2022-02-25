@@ -2,7 +2,7 @@ import jest from "jest-mock";
 import httpMocks from "node-mocks-http";
 import { heroContoller } from "../../controllers/hero.controller.js";
 import { HeroModel } from "../../model/hero.model.js";
-import newHero from "../mock-data.json";
+import newHero from "../mock-data/new-hero.json";
 
 HeroModel.create = jest.fn(); // tracker chip
 let req, res;
