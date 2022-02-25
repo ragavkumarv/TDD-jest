@@ -5,6 +5,8 @@ import heroRoutes from "./routes/hero.routes.js";
 connect();
 const app = express();
 
+app.use(express.json());
+
 export function hello(request, response) {
   response.json({ message: "🙋‍♂️, 🌏!!!" });
 }
