@@ -40,6 +40,14 @@ describe("Herocontroller.createHero", () => {
     await heroContoller.createHero(req, res);
     expect(res._getJSONData()).toStrictEqual(newHero);
   });
+
+  it("should call errors", async () => {
+    const errorMessage = { message: "strength property is missing" };
+    const rejectedPromise = Promise.reject(errorMessage);
+    HeroModel.create.mockReturnValue(rejectedPromise);
+    await heroContoller.createHero(req, res);
+    expect(res._getJSONData()).toStrictEqual(errorMessage);
+  });
 });
 
 // mock/fake value
@@ -64,5 +72,14 @@ describe("Herocontroller.getHeroes", () => {
     expect(res._isEndCalled()).toBeTruthy();
     expect(res._getJSONData()).toStrictEqual(allHeroes);
     // Value provided by HeroModel(mock) -> Are we getting the same data in response?
+  });
+
+  it("should call errors", async () => {
+    const errorMessage = { message: "Error in finding" };
+    const rejectedPromise = Promise.reject(errorMessage);
+    HeroModel.find.mockReturnValue(rejectedPromise);
+    await heroContoller.getHeroes(req, res);
+    expect(res.statusCode).toBe(500);
+    expect(res._getJSONData()).toStrictEqual(errorMessage);
   });
 });
