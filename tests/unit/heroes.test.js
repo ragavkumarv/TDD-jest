@@ -7,6 +7,7 @@ import newHero from "../mock-data/new-hero.json";
 
 HeroModel.create = jest.fn(); // tracker chip
 HeroModel.find = jest.fn(); // tracker chip
+HeroModel.findByIdAndDelete = jest.fn();
 let req, res;
 
 beforeEach(() => {
@@ -74,12 +75,50 @@ describe("Herocontroller.getHeroes", () => {
     // Value provided by HeroModel(mock) -> Are we getting the same data in response?
   });
 
-  it("should call errors", async () => {
+  it("should handle errors", async () => {
     const errorMessage = { message: "Error in finding" };
     const rejectedPromise = Promise.reject(errorMessage);
     HeroModel.find.mockReturnValue(rejectedPromise);
     await heroContoller.getHeroes(req, res);
     expect(res.statusCode).toBe(500);
     expect(res._getJSONData()).toStrictEqual(errorMessage);
+  });
+});
+
+const HERO_ID = "3343jksjd34343334";
+describe("Herocontroller.deleteHero", () => {
+  it("should have deleteHero function", () => {
+    expect(typeof heroContoller.deleteHero).toBe("function");
+  });
+
+  it("should call HeroModel.findByIdAndDelete", async () => {
+    req.params.heroId = HERO_ID;
+    await heroContoller.deleteHero(req, res);
+    expect(HeroModel.findByIdAndDelete).toBeCalledWith(HERO_ID);
+  });
+
+  it("should return 200 response code and delete Hero", async () => {
+    HeroModel.findByIdAndDelete.mockReturnValue(newHero);
+    await heroContoller.deleteHero(req, res);
+    expect(res.statusCode).toBe(200);
+    expect(res._isEndCalled()).toBeTruthy();
+    expect(res._getJSONData()).toStrictEqual(newHero);
+    // Value provided by HeroModel(mock) -> Are we getting the same data in response?
+  });
+
+  it("should handle errors", async () => {
+    const errorMessage = { message: "Error in deleting" };
+    const rejectedPromise = Promise.reject(errorMessage);
+    HeroModel.findByIdAndDelete.mockReturnValue(rejectedPromise);
+    await heroContoller.deleteHero(req, res);
+    expect(res.statusCode).toBe(500);
+    expect(res._getJSONData()).toStrictEqual(errorMessage);
+  });
+
+  it("should handle 404", async () => {
+    HeroModel.findByIdAndDelete.mockReturnValue(null);
+    await heroContoller.deleteHero(req, res);
+    expect(res.statusCode).toBe(404);
+    expect(res._isEndCalled()).toBeTruthy();
   });
 });

@@ -18,9 +18,23 @@ async function getHeroes(req, res) {
   }
 }
 
+async function deleteHero(req, res) {
+  try {
+    const deletedHero = await HeroModel.findByIdAndDelete(req.params.heroId);
+    if (deletedHero) {
+      res.status(200).json(deletedHero);
+    } else {
+      res.status(404).send();
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+}
+
 export const heroContoller = {
   createHero,
   getHeroes,
+  deleteHero,
 };
 
 // getHeroes -> unit + integeration
