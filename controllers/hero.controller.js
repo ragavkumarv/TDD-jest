@@ -34,6 +34,7 @@ async function deleteHero(req, res) {
 async function updateHero(req, res) {
   // How? -> use new syntax and not old syntax (useFindAndModify)
   try {
+    // console.log(req.params, req.query, req.body);
     const updatedHero = await HeroModel.findByIdAndUpdate(
       req.params.heroId,
       req.body,

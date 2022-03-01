@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.post("/", heroContoller.createHero);
 router.get("/", heroContoller.getHeroes);
-router.delete("/", heroContoller.deleteHero);
-router.put("/", heroContoller.updateHero);
+router.delete("/:heroId", heroContoller.deleteHero);
+router.put("/:heroId", heroContoller.updateHero);
 
 export default router;
