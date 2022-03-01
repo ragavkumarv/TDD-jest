@@ -3,6 +3,8 @@ import { heroContoller } from "../controllers/hero.controller.js";
 const router = express.Router();
 
 router.post("/", heroContoller.createHero);
-// router.get('/',  heroContoller.getHeros);
+router.get("/", heroContoller.getHeroes);
+router.delete("/", heroContoller.deleteHero);
+router.put("/", heroContoller.updateHero);
 
 export default router;

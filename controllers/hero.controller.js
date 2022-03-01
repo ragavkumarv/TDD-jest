@@ -31,10 +31,32 @@ async function deleteHero(req, res) {
   }
 }
 
+async function updateHero(req, res) {
+  // How? -> use new syntax and not old syntax (useFindAndModify)
+  try {
+    const updatedHero = await HeroModel.findByIdAndUpdate(
+      req.params.heroId,
+      req.body,
+      {
+        new: true,
+        useFindAndModify: false,
+      }
+    );
+    if (updatedHero) {
+      res.status(200).json(updatedHero);
+    } else {
+      res.status(404).send();
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+}
+
 export const heroContoller = {
   createHero,
   getHeroes,
   deleteHero,
+  updateHero,
 };
 
 // getHeroes -> unit + integeration

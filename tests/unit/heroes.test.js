@@ -8,6 +8,7 @@ import newHero from "../mock-data/new-hero.json";
 HeroModel.create = jest.fn(); // tracker chip
 HeroModel.find = jest.fn(); // tracker chip
 HeroModel.findByIdAndDelete = jest.fn();
+HeroModel.findByIdAndUpdate = jest.fn();
 let req, res;
 
 beforeEach(() => {
@@ -118,6 +119,49 @@ describe("Herocontroller.deleteHero", () => {
   it("should handle 404", async () => {
     HeroModel.findByIdAndDelete.mockReturnValue(null);
     await heroContoller.deleteHero(req, res);
+    expect(res.statusCode).toBe(404);
+    expect(res._isEndCalled()).toBeTruthy();
+  });
+});
+
+describe("Herocontroller.updateHero", () => {
+  it("should have updateHero function", () => {
+    expect(typeof heroContoller.updateHero).toBe("function");
+  });
+
+  it("should call HeroModel.findByIdAndUpdate", async () => {
+    req.params.heroId = HERO_ID;
+    req.body = newHero;
+    await heroContoller.updateHero(req, res);
+    expect(HeroModel.findByIdAndUpdate).toBeCalledWith(HERO_ID, newHero, {
+      new: true,
+      useFindAndModify: false,
+    });
+  });
+
+  it("should return 200 response code and update Hero", async () => {
+    req.params.heroId = HERO_ID;
+    req.body = newHero;
+    HeroModel.findByIdAndUpdate.mockReturnValue(newHero);
+    await heroContoller.updateHero(req, res);
+    expect(res.statusCode).toBe(200);
+    expect(res._isEndCalled()).toBeTruthy();
+    expect(res._getJSONData()).toStrictEqual(newHero);
+    // Value provided by HeroModel(mock) -> Are we getting the same data in response?
+  });
+
+  it("should handle errors", async () => {
+    const errorMessage = { message: "Error in updating" };
+    const rejectedPromise = Promise.reject(errorMessage);
+    HeroModel.findByIdAndUpdate.mockReturnValue(rejectedPromise);
+    await heroContoller.updateHero(req, res);
+    expect(res.statusCode).toBe(500);
+    expect(res._getJSONData()).toStrictEqual(errorMessage);
+  });
+
+  it("should handle 404", async () => {
+    HeroModel.findByIdAndUpdate.mockReturnValue(null);
+    await heroContoller.updateHero(req, res);
     expect(res.statusCode).toBe(404);
     expect(res._isEndCalled()).toBeTruthy();
   });
